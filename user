@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>歐洲博物館攻略 - 我的收藏</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" href="../icon/review.png" />
+    <style>
+      /* ---- 全域樣式 ---- */
+      html,
+      body {
+        font-family: "Noto Sans TC", "Inter", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf3 100%);
+        height: 100%;
+        margin: 0;
+        padding-top: 60px;
+        overflow-x: visible !important;
+      }
+      .main-container {
+        overflow-x: hidden;
+      }
+      /* ---- 上方導覽列 ---- */
+      .btn-outline-light {
+        color: white;
+        border-color: white;
+      }
+      .btn-outline-light:hover {
+        background-color: white;
+        color: #343a40;
+      }
+      /* ---- 用戶卡片 ---- */
+      .user-card {
+        background: rgba(245, 245, 248, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        color: #2e2e3e;
+        background-image: linear-gradient(135deg, #c5c3c6 0%, #e3e2e5 100%);
+        transition: transform 0.3s ease;
+      }
+      .user-card:hover {
+        transform: translateY(-5px);
+      }
+      .user-card img {
+        border: 3px solid rgba(255, 255, 255, 0.9);
+      }
+      .user-card .card-text {
+        color: #6b6a73 !important;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .user-card .card-title {
+        color: #92d4e6 !important;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+      /* ---- 收藏清單卡片 ---- */
+      .card {
+        border-radius: 1rem;
+        border: none;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.6s ease;
+        background: #f6f5f7;
+      }
+      .card-title {
+        font-weight: 700;
+        font-size: 1.3rem;
+        border-bottom: 2px solid #d8d6d8;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        color: #4a4a55;
+      }
+      /* ---- 收藏清單項目 ---- */
+      .list-group-item {
+        border: none;
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding: 1rem 1.2rem;
+        background: #eceaec;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          background-color 0.3s ease;
+        flex-direction: column;
+        align-items: flex-start !important;
+      }
+      .list-group-item:hover {
+        transform: translateX(6px);
+        background: linear-gradient(90deg, #d7d5d8 0%, #fff1f3 100%);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      .museum-info span {
+        font-weight: 600;
+        color: #3c3c4b;
+      }
+      .museum-tips {
+        font-size: 0.85rem;
+        color: #7a7884;
+        margin-top: 4px;
+      }
+      /* ---- 評論區 ---- */
+      .museum-comment-box {
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .museum-comment-box textarea {
+        background-color: #f8f8f8;
+        border: 1px solid #dcdcdc;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        resize: vertical;
+        min-height: 80px;
+        transition: border-color 0.3s ease;
+      }
+      .museum-comment-box textarea:focus {
+        border-color: #a0a0a0;
+        box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+      }
+      /* ---- 收藏項按鈕 ---- */
+      .list-group-item .btn-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.3rem; /* 按鈕間距縮小 */
+        margin-top: 0.5rem; /* 與上方內容距離稍微縮小 */
+      }
+      .list-group-item .btn {
+        padding: 0.25rem 0.5rem; /* 更小的內距 */
+        font-size: 0.7rem; /* 字體縮小 */
+        line-height: 1.2; /* 保持垂直置中 */
+        border-radius: 0.5rem; /* 輕微圓角，避免太大 */
+      }
+      .btn-go {
+        background: linear-gradient(135deg, #a8dadc 0%, #b1c3ce 100%);
+      }
+      .btn-cancel {
+        background: linear-gradient(135deg, #ffb6b9 0%, #f28482 100%);
+      }
+      .list-group-item .btn:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+      /* ---- 動畫 ---- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      /* ---- 側邊選單 ---- */
+      .offcanvas-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 80px;
+      }
+      .search-form-offcanvas {
+        display: flex;
+        padding: 1rem;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .offcanvas {
+        transition: transform 0.33s ease-in-out !important;
+      }
+      .offcanvas-start {
+        transform: translateX(-100%);
+      }
+      .offcanvas.show {
+        transform: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark fixed-top top-navbar">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasMenu"
+          aria-controls="offcanvasMenu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand mx-auto" href="EuropeanMuseum.html"
+          >歐洲博物館攻略</a
+        >
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-light" href="userfavorite.html">
+            <i class="bi bi-person-circle"></i>用戶
+          </a>
+          <a class="btn btn-outline-light" id="loginBtn" href="log.html"
+            >登入</a
+          >
+        </div>
+      </div>
+    </nav>
+    <div
+      class="main-container d-flex flex-column align-items-center gap-4 my-5"
+    >
+      <div class="card user-card" style="width: 20rem">
+        <div
+          class="card-body d-flex flex-column align-items-center justify-content-center"
+        >
+          <img
+            src="../img/mr.van.png"
+            class="img-fluid rounded-circle mb-3"
+            alt="用戶頭像"
+            style="width: 100px; height: 100px; object-fit: cover"
+          />
+          <h5 class="card-text text-center"></h5>
+          <p class="card-title text-center" id="favCount">收藏 0</p>
+        </div>
+      </div>
+      <div class="container my-5">
+        <div class="card w-100 w-md-75 w-lg-50 mx-auto">
+          <div class="card-body">
+            <h1 class="card-title">我的收藏</h1>
+            <ul class="list-group list-group-flush" id="favList"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="offcanvas offcanvas-start text-bg-dark"
+      tabindex="-1"
+      id="offcanvasMenu"
+      aria-labelledby="offcanvasMenuLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">探索區域</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form class="search-form-offcanvas">
+        <input
+          class="form-control"
+          type="search"
+          placeholder="搜尋"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-light" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              >西歐</a
+            >
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              id="WesternEuropeMenu"
+            ></ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              >南歐</a
+            >
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              id="SouthernEuropeMenu"
+            ></ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              >東歐</a
+            >
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              id="EasternEuropeMenu"
+            ></ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              >北歐</a
+            >
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              id="NorthernEuropeMenu"
+            ></ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 博物館連結資料
+      const museumLinks = {
+        "阿姆斯特丹國家博物館 Rijksmuseum": "Netherlands.html",
+        "梵谷博物館 Van Gogh Museum Amsterdam": "Netherlands.html",
+        "莫瑞泰斯皇家美術館 Mauritshuis": "Netherlands.html",
+        "庫勒-慕勒美術館 Kröller-Müller Museum": "Netherlands.html",
+        "阿姆斯特丹市立博物館 Stedelijk Museum Amsterdam": "Netherlands.html",
+        "林布蘭之家博物館 Museum Het Rembrandthuis": "Netherlands.html",
+        "海牙現代美術館 Gemeentemuseum Den Haag": "Netherlands.html",
+        "羅浮宮 Musée du Louvre": "France.html",
+        "奧賽博物館 Musée d'Orsay": "France.html",
+        "橘園美術館 Musée de l'Orangerie": "France.html",
+        "龐畢度中心 Centre Pompidou": "France.html",
+      };
+
+      // 博物館提示資訊
+      const museumTips = {
+        "阿姆斯特丹國家博物館 Rijksmuseum": "✅ 需提早預約 ｜ 🎟️ 可借博物館卡",
+        "梵谷博物館 Van Gogh Museum Amsterdam":
+          "✅ 需提早一個月預約 ｜ 🤓學生可折扣",
+        "莫瑞泰斯皇家美術館 Mauritshuis": "✅ 需提早預約 ｜ ⏰ 閉館時間較早",
+        "庫勒-慕勒美術館 Kröller-Müller Museum":
+          "🌳 位於國家公園內 ｜ 🚲 可免費騎單車",
+        "阿姆斯特丹市立博物館 Stedelijk Museum Amsterdam":
+          "🎨 現代藝術愛好者必訪",
+        "林布蘭之家博物館 Museum Het Rembrandthuis": "✍️ 可觀看版畫製作示範",
+        "海牙現代美術館 Gemeentemuseum Den Haag": "🟥 蒙德里安作品最全",
+        "羅浮宮 Musée du Louvre":
+          "✅ 需提早預約 ｜ 🙅🏼 周二公休 ｜ 🕰️ 周三/周五夜間開放",
+        "奧賽博物館 Musée d'Orsay": "✅ 需提早預約 ｜ 🕰️ 周四夜間開放",
+        "橘園美術館 Musée de l'Orangerie": "🖼️ 莫內《睡蓮》主題",
+        "龐畢度中心 Centre Pompidou": "🎨 現代藝術與設計中心",
+      };
+
+      // 取得收藏資料
+      function getFavorites() {
+        try {
+          const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+          return favs.filter((item) => item && typeof item.name === "string");
+        } catch (e) {
+          console.error("Failed to parse favorites from localStorage:", e);
+          return [];
+        }
+      }
+
+      // 渲染收藏清單
+      function renderFavs() {
+        const favListElement = document.getElementById("favList");
+        const favCountElement = document.getElementById("favCount");
+        const data = getFavorites();
+
+        if (!favListElement) return;
+
+        favListElement.innerHTML = "";
+
+        if (data.length === 0) {
+          favListElement.innerHTML = `<li class='list-group-item text-center'>尚未收藏任何博物館</li>`;
+        } else {
+          data.forEach((item) => {
+            const name = item.name;
+            const comment = item.comment || "";
+            const tips = museumTips[name] || "";
+            const goLink = museumLinks[name] || "#";
+
+            const li = document.createElement("li");
+            li.className = "list-group-item";
+            li.dataset.name = name;
+            li.innerHTML = `
+              <div class="d-flex w-100 justify-content-between align-items-center">
+                <div class="museum-info">
+                  <span>${name}</span>
+                  ${
+                    tips
+                      ? `<small class="museum-tips d-block">${tips}</small>`
+                      : ""
+                  }
+                </div>
+                <div class="btn-group">
+                  <a href="${goLink}" class="btn btn-sm btn-go" target="_blank" rel="noopener">前往頁面</a>
+                  <button class="btn btn-sm btn-cancel">取消收藏</button>
+                </div>
+              </div>
+              <div class="museum-comment-box">
+                <label for="comment-${name.replace(
+                  /\s+/g,
+                  "-"
+                )}" class="form-label visually-hidden">評論</label>
+                <textarea class="form-control" id="comment-${name.replace(
+                  /\s+/g,
+                  "-"
+                )}" rows="3" placeholder="備忘錄..." data-name="${name}">${comment}</textarea>
+              </div>
+            `;
+            favListElement.appendChild(li);
+          });
+        }
+        if (favCountElement) {
+          favCountElement.textContent = `收藏 ${data.length}`;
+        }
+      }
+
+      // 儲存評論
+      function saveComment(name, comment) {
+        let data = getFavorites();
+        const item = data.find((item) => item.name === name);
+        if (item) {
+          item.comment = comment;
+          localStorage.setItem("favorites", JSON.stringify(data));
+        }
+      }
+
+      // 處理取消收藏
+      function handleCancelFavorite(name) {
+        let data = getFavorites();
+        data = data.filter((item) => item.name !== name);
+        localStorage.setItem("favorites", JSON.stringify(data));
+        renderFavs();
+      }
+
+      // 載入側邊選單國家列表
+      function loadCountries(region, menuId) {
+        const countries = {
+          "Western Europe": [
+            { name_zh: "法國", link: "France.html" },
+            { name_zh: "荷蘭", link: "Netherlands.html" },
+            { name_zh: "英國", link: "#" },
+            { name_zh: "德國", link: "#" },
+            { name_zh: "比利時", link: "#" },
+            { name_zh: "瑞士", link: "#" },
+          ],
+          "Southern Europe": [
+            { name_zh: "義大利", link: "#" },
+            { name_zh: "西班牙", link: "#" },
+            { name_zh: "希臘", link: "#" },
+          ],
+          "Eastern Europe": [
+            { name_zh: "捷克", link: "#" },
+            { name_zh: "匈牙利", link: "#" },
+            { name_zh: "波蘭", link: "#" },
+          ],
+          "Northern Europe": [
+            { name_zh: "瑞典", link: "#" },
+            { name_zh: "芬蘭", link: "#" },
+            { name_zh: "挪威", link: "#" },
+          ],
+        };
+        const menu = document.getElementById(menuId);
+        if (!menu) return;
+        menu.innerHTML = "";
+        (countries[region] || []).forEach((c) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<a class="dropdown-item" href="${c.link}">${c.name_zh}</a>`;
+          menu.appendChild(li);
+        });
+      }
+
+      // 頁面載入完成後執行主要邏輯
+      document.addEventListener("DOMContentLoaded", () => {
+        const loginBtn = document.getElementById("loginBtn");
+        const userNameDisplay = document.querySelector(".user-card .card-text");
+        const favListElement = document.getElementById("favList");
+
+        // 登入狀態檢查與 UI 更新
+        let loggedIn = localStorage.getItem("loggedIn") === "true";
+        if (!loggedIn) {
+          loginBtn.href =
+            "log.html?redirect=" + encodeURIComponent(window.location.pathname);
+          userNameDisplay.textContent = "請先登入";
+          if (favListElement) {
+            favListElement.innerHTML = `<li class='list-group-item text-center'>尚未登入，請先登入查看收藏</li>`;
+          }
+        } else {
+          loginBtn.textContent = "登出";
+          loginBtn.href = "#";
+          loginBtn.onclick = () => {
+            localStorage.removeItem("loggedIn");
+            localStorage.removeItem("username");
+            alert("已登出！");
+            window.location.reload();
+          };
+          const username = localStorage.getItem("username") || "用戶";
+          userNameDisplay.textContent = username;
+          renderFavs();
+        }
+
+        // 事件監聽器：取消收藏與評論
+        if (favListElement) {
+          favListElement.addEventListener("click", (e) => {
+            if (e.target.classList.contains("btn-cancel")) {
+              const li = e.target.closest("li");
+              const name = li?.dataset.name;
+              if (name) {
+                handleCancelFavorite(name);
+              }
+            }
+          });
+
+          favListElement.addEventListener("input", (e) => {
+            if (e.target.tagName === "TEXTAREA") {
+              const name = e.target.dataset.name;
+              const comment = e.target.value;
+              if (name) {
+                saveComment(name, comment);
+              }
+            }
+          });
+        }
+
+        // 載入側邊選單
+        loadCountries("Western Europe", "WesternEuropeMenu");
+        loadCountries("Southern Europe", "SouthernEuropeMenu");
+        loadCountries("Eastern Europe", "EasternEuropeMenu");
+        loadCountries("Northern Europe", "NorthernEuropeMenu");
+      });
+    </script>
+  </body>
+</html>
